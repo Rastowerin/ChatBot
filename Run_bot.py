@@ -1,26 +1,28 @@
+import random
+
 import requests
-
-from Config import *
 import vk_api
+from Config import *
 
-vkBot = vk_api.VkApi(token=ACCSESS_TOKEN)
-response = vkBot.method('users.get', {'user_ids': MY_ID})
-print(response)
-response = response[0]
-print(response)
-print(response['first_name'])
 
-response = vkBot.method('users.get', {'users_ids': MY_ID})
-print((response[0])['first_name'])
+def write_msg(user_id, text):
+    vk_api.method('messages.send', {'user_id': user_id, 'message': text, 'random_id': random.randint(0, 1000)})
 
-vkBot.method('messages.send', {'user_id': MY_ID, 'message': 'привет', 'random_id': 123})
 
-response = requests.get(API_URL + 'users.get?user_id=' + MY_ID + '&v=5.52&access_token=' + ACCSESS_TOKEN)
-print(response.text)
-response = requests.get(API_URL + 'users.get', {'user_id': MY_ID, 'v': 5.74, 'access_token': ACCSESS_TOKEN})
-print(response.text)
+vk_bot = vk_api.VkApi(token=ACCESS_TOKEN)
+long_poll = vk_bot.method('messages.getLongPollServer', {'need_pts': 1, 'lp_version': 3})
+server, key, ts = long_poll['server'], long_poll['key'], long_poll['ts']
+print('готов к работе')
+# + str(long_poll))
 
-vkBot = vk_api.VkApi(token=ACCSESS_TOKEN)
-response = vkBot.method('users.get', {'user_ids': MY_ID})
-print(response)
-response = requests.get('{url}users.get?users_id = {id}&v = {v}&access_token = {ac_t}'.format(url=API_URL, id=MY_ID, v=5.74,ac_t=ACCSESS_TOKEN))
+while True:
+    long_poll = requests.get('https://{server}?act={act}&key={key}&ts={ts}&wait=500'.format(server=server,
+                                                                                            act='a_check',
+                                                                                            key=key,
+                                                                                            ts=ts)).json()
+    update = long_poll['updates']
+    if update[0][0] == 4:
+        # print(update)
+        user_id = update[0][3]
+        user_name = vk_bot.method('users.get', {'user_ids': user_id})
+        write_msg(user_id, 'привет, ' + (user_name[0]['first_name'])) #сообщение пользователю
