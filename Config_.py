@@ -1,0 +1,5 @@
+TOKEN = ''
+MY_ID = '321056236'
+APP_ID = ''
+API_URL = 'https://api.vk.com/method/'
+ACCESS_TOKEN = ''
