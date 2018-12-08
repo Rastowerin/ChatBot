@@ -6,7 +6,7 @@ from Config import *
 
 
 def write_msg(user_id, text):
-    vk_api.method('messages.send', {'user_id': user_id, 'message': text, 'random_id': random.randint(0, 1000)})
+    vk_bot.method('messages.send', {'user_id': user_id, 'message': text, 'random_id': random.randint(0, 1000)})
 
 
 vk_bot = vk_api.VkApi(token=ACCESS_TOKEN)
@@ -26,3 +26,6 @@ while True:
         user_id = update[0][3]
         user_name = vk_bot.method('users.get', {'user_ids': user_id})
         write_msg(user_id, 'привет, ' + (user_name[0]['first_name'])) #сообщение пользователю
+
+def Write_msg_attach(user_id, text, att_url):
+    vk_bot.method('messages.send', 'user_id': user_id,'attachment': att_url, 'message': text, 'random_id': random.randint(0, 1000))
