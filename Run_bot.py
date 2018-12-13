@@ -24,7 +24,7 @@ while True:
                                                                                             key=key,
                                                                                             ts=ts)).json()
     update = long_poll['updates']
-    if update[0][0] == 4 and update[0][6] == 'привет' or 'Привет':
+    if update[0][0] == 4 and  update[0][3] != 321056236 and update[0][6] == 'привет' or 'Привет':
         user_id = update[0][3]
         user_name = vk_bot.method('users.get', {'user_ids': user_id})
         write_msg(user_id, 'привет, ' + (user_name[0]['first_name'])) #сообщение пользователю
