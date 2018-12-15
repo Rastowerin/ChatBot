@@ -1,20 +1,6 @@
-import random
-
 import requests
-import vk_api
-from Config import *
 
-def write_msg(user_id, text):
-    vk_bot.method('messages.send', {'user_id': user_id, 'message': text, 'random_id': random.randint(0, 1000)})
-
-vk_bot = vk_api.VkApi(token=ACCESS_TOKEN)
-long_poll = vk_bot.method('messages.getLongPollServer', {'need_pts': 1, 'lp_version': 3})
-server, key, ts = long_poll['server'], long_poll['key'], long_poll['ts']
-#print(server)
-#print(key)
-#print(ts)
-print('готов к работе')
-# + str(long_poll))
+from Functions import *
 
 while True:
     new_ts = vk_bot.method('messages.getLongPollServer', {'need_pts': 1, 'lp_version': 3})
@@ -27,4 +13,11 @@ while True:
     if update[0][0] == 4 and  update[0][3] != 321056236 and update[0][6] == 'привет' or 'Привет':
         user_id = update[0][3]
         user_name = vk_bot.method('users.get', {'user_ids': user_id})
-        write_msg(user_id, 'привет, ' + (user_name[0]['first_name'])) #сообщение пользователю
+        write_msg(user_id, 'привет, ' + (user_name[0]['first_name']))
+    elif update[0][0] == 4 and  update[0][3] != 321056236 and 'картинк' in update[0][6]:
+        write_msg_attach(user_id, None, random.choice(memes_id))
+    elif update[0][0] == 4 and  update[0][3] != 321056236 and 'красив' in update[0][6]:
+        group_id = -35684707
+        post_id = get_last_post(group_id, 1, 1, 'owner')
+        attach = 'wall' + str(group_id) + '_' + str(post_id)
+        write_msg_attach(user_id, None, attach)
