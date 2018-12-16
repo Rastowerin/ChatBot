@@ -1,6 +1,6 @@
 import requests
 
-from Functions1 import *
+from Functions import *
 
 while True:
     new_ts = vk_bot.method('messages.getLongPollServer', {'need_pts': 1, 'lp_version': 3})
