@@ -11,16 +11,14 @@ while True:
                                                                                             ts=ts)).json()
    
     update = long_poll['updates']
-    #if update[0][0] == 4 and update[0][6] == 'привет' or 'Привет':
-    #    print('1')
-    #    user_id = update[0][3]
-    #    user_name = vk_bot.method('users.get', {'user_ids': user_id})
-    #    write_msg(user_id, 'привет, ' + (user_name[0]['first_name']))
-    if update[0][0] == 4 and  update[0][3] == 321056236 and '!дз' in update[0][6] and update[0][6] != '!дз':
-        school_subject = update[0][6].split(':')[1]
-        print(school_subject)
-        str(school_subject)
-        if str(school_subject) in homework:
-            print(1)
-            homework[school_subject] = update[0][6].split(':')
-            print(homework[school_subject])
+
+    if update[0][0] == 4 and '!дз' in update[0][6] and '!!дз' not in update[0][6] and update[0][6] != '!дз':
+        subject = update[0][6].split(': ')[1]
+        if '%s' % subject in homework:
+            write_msg(update[0][3], homework['%s' % subject])
+    elif update[0][0] == 4 and  update[0][3] == 321056236 and '!!дз' in update[0][6] and update[0][6] != '!!дз':
+        subject = update[0][6].split(': ')[1]
+        print(subject)
+        if '%s' % subject in homework:
+            homework['%s' % subject] = update[0][6].split(': ')[2]
+            print(homework['%s' % subject])
